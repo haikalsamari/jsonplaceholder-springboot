@@ -2,11 +2,9 @@ package com.wsomad.PublicSocialNetwork.controller;
 
 import com.wsomad.PublicSocialNetwork.model.Post;
 import com.wsomad.PublicSocialNetwork.service.PostService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,14 +19,18 @@ public class PostController {
 
     @GetMapping
     public List<Post> getAllPosts(
-            @RequestParam(required = false) int userId,
-            @RequestParam(defaultValue = "10") int limit
+            @RequestParam(required = false) Integer  userId,
+            @RequestParam(required = false, defaultValue = "10") Integer  limit
             ) {
 
-        Map<String, Object> params = Map.of(
-                "userId", userId,
-                "limit", limit
-        );
+        Map<String, Object> params = new HashMap<>();
+        if (userId != null) params.put("userId", userId);
+        if (limit != null) params.put("limit", limit);
         return postService.getAllPosts(params);
+    }
+
+    @GetMapping("/{postId}")
+    public Post getPostById(@PathVariable int postId) {
+        return postService.getPostById(postId);
     }
 }
